@@ -389,6 +389,8 @@ void Read::sort_by_gen(){
 
 class User{
 private:
+    static int totalUsers;
+    int const id;
     string name;
     Read tracker;
 
@@ -406,22 +408,18 @@ public:
 
     Read& getTracker();
 
-    
-    void UpdateProgress(int index);
-    void ShowProgress();
-
 };
-User::User(const User& obj){
+User::User(const User& obj): id(totalUsers++){
     name = obj.name;
     tracker = obj.tracker;
 }
 Read& User::getTracker(){
     return tracker;
 }
-User::User(){
+User::User(): id(totalUsers++){
     name = "Anonymuos";
 }
-User::User(string name){
+User::User(string name): id(totalUsers++){
     this->name = name;
 }
 string User::getName() const{
@@ -446,7 +444,7 @@ User& User::operator=(const User& obj){
         
     return *this;
 }
-
+int User::totalUsers = 1 ;
 
 void case1_adding_book(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
