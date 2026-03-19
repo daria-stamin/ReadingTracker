@@ -206,7 +206,7 @@ User& User::operator=(const User& obj){
     return *this;
 }
 void User::AddBook(Book *book){
-   // int nr = Book::getTotalBooks();
+   //int nr = Book::getTotalBooks();
     //books[nr] = book;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,6 +235,9 @@ public:
     void setPagesTotal(int);
     void setProcentage(float);
     void setFinished(bool);
+
+    //getters
+    bool getFinished() const;
 
 };
 void ReadingProgress::setPagesRead(int pg){
@@ -301,12 +304,14 @@ ostream& operator<<(ostream& out, const ReadingProgress& obj){  /// operator<< A
     out<<"finish status: "<<obj.finished<<endl;
     return out;
 }
-
+bool ReadingProgress::getFinished() const{
+    return finished;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-class Read {
+class Read{
 private:
     User user;
     int totalBooks;
@@ -322,6 +327,10 @@ public:
     void printCollection();
     void update_progress(int index);
     void show_progress();
+
+    void sort_by_fin();
+    void sort_by_unfin();
+    void sort_by_gen();
 
     int getTotalBooks();
 };
@@ -391,6 +400,53 @@ void Read::show_progress(){
     for(int i=0;i<totalBooks;i++){
         cout<<"Book: "<<books[i]->getTitle()<<endl;
         cout<<progress[i]<<endl;
+    }
+}
+void Read::sort_by_fin(){
+    for(int i=0;i<totalBooks;i++){
+        if(progress[i].getFinished() == true)
+        cout<<"Book: "<<books[i]->getTitle()<<endl;
+        
+    }
+}
+void Read::sort_by_unfin(){
+    for(int i=0;i<totalBooks;i++){
+        if(progress[i].getFinished() == false)
+        cout<<"Book: "<<books[i]->getTitle()<<endl;
+        
+    }
+}
+
+void Read::sort_by_gen(){
+    cout<<"All my romance books: ";
+    for(int i=0;i<totalBooks;i++){
+        if(books[i]->getGenre() == 'r')
+        cout<<books[i]->getTitle()<<' ';
+    }
+    cout<<endl;
+    cout<<"All my fantasy books: ";
+    for(int i=0;i<totalBooks;i++){
+        if(books[i]->getGenre() == 'f')
+        cout<<books[i]->getTitle()<<' ';
+    }
+    cout<<endl;
+    cout<<"All my comedy books: ";
+    for(int i=0;i<totalBooks;i++){
+        if(books[i]->getGenre() == 'c')
+        cout<<books[i]->getTitle()<<' ';
+    }
+    cout<<endl;
+    cout<<"All my murder mystery books: ";
+    for(int i=0;i<totalBooks;i++){
+        if(books[i]->getGenre() == 'm')
+        cout<<books[i]->getTitle()<<' ';
+    }
+    
+    cout<<"All my scientific books: ";
+    for(int i=0;i<totalBooks;i++){
+        if(books[i]->getGenre() == 's')
+        cout<<books[i]->getTitle()<<' ';
+    
     }
 }
 
@@ -480,7 +536,49 @@ void case4_show_status(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
     cout<<endl;
     cout<<"4. Track my reading."<<endl;
-     tracker.show_progress();
+    tracker.show_progress();
+
+    cout<<"If you want to go back to main meniu press 0"<<endl;
+    int x;
+    cin>>x;
+    if(x==0)
+        system("CLS");
+}
+
+void case5_sort_collection(Read &tracker) {
+    cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
+    cout<<endl;
+    cout<<"Sort by:"<<endl;
+    cout<<"1. Finished books."<<endl;
+    cout<<"2. In progress books."<<endl;
+    cout<<"3. By genre."<<endl;
+    cout<<"4. Quit."<<endl;
+
+    cout<<"Press the number coresponding with your sorting method prefered: ";
+    int button;
+    cin>>button;
+
+    switch(button) {
+            case(1):{
+                if(tracker.getTotalBooks() !=0 ){
+                    tracker.sort_by_fin();
+                }
+                break; }
+            case(2):{
+                if(tracker.getTotalBooks() !=0 ){
+                    tracker.sort_by_unfin();
+                }
+                break; }
+            case(3):{
+                if(tracker.getTotalBooks() !=0 ){
+                    tracker.sort_by_gen();
+                }
+                   break; }
+            case(4):{
+                system("CLS");
+                   break; }
+            }
+    
 
     cout<<"If you want to go back to main meniu press 0"<<endl;
     int x;
@@ -504,10 +602,12 @@ void Meniu::run(){
         cout<<"2. See my current book collection."<<endl;
         cout<<"3. Update my reading progress."<<endl;
         cout<<"4. Track my reading."<<endl;
+        cout<<"5. Sort my books."<<endl;
+        cout<<"6. Quit."<<endl;
         cout<<endl<<"Press the number:";
         int x;
         cin>>x;
-        while(x > 4) {
+        while(x > 6) {
             cout<<"Invalid number! Please try again!"<<endl;
             cout<<"Press the number:";
             cin>>x;
@@ -530,6 +630,14 @@ void Meniu::run(){
                 system("CLS");
                 case4_show_status(tracker);
                 break; }
+            case(5):{
+                system("CLS");
+                case5_sort_collection(tracker);
+                break; }
+            case(6):{
+                return;
+                break; }
+        
         }
     }
 
