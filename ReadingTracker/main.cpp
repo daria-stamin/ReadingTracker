@@ -161,6 +161,8 @@ int Book::totalBooks = 1;
 class User{
 private:
     string name;
+  //  Book *books;
+   // ReadingProgress progress;
 
 public:
     User();
@@ -172,6 +174,11 @@ public:
 
     void setName(string name);
     string getName() const ;
+
+    void AddBook(Book *book);
+    void UpdateProgress(int index);
+    void ShowProgress();
+
 };
 User::User(){
     name = "Anonymuos";
@@ -198,7 +205,10 @@ User& User::operator=(const User& obj){
         this->name= obj.name;
     return *this;
 }
-
+void User::AddBook(Book *book){
+   // int nr = Book::getTotalBooks();
+    //books[nr] = book;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -212,14 +222,11 @@ private:
     float percentage; // read %
     bool finished;
 public:
-    //constructor
     ReadingProgress();
     ReadingProgress(int, int, float, bool);
     ReadingProgress(const ReadingProgress&);
 
-    //operatori
     ReadingProgress& operator=(const ReadingProgress&);
-
     friend ostream& operator<<(ostream&, const ReadingProgress&);
     friend istream& operator>>(istream&, ReadingProgress&);
 
@@ -229,17 +236,19 @@ public:
     void setProcentage(float);
     void setFinished(bool);
 
-
 };
-
-// Constructors + Operator //
-
-/*ReadingProgress& ReadingProgress::operator=(const ReadingProgress& prog) {
-    pagesRead = prog.pagesRead;
-    totalPages = prog.totalPages;
-    percentage = prog.percentage;
-    finished = prog.finished;
-}*/
+void ReadingProgress::setPagesRead(int pg){
+    pagesRead=pg;
+}
+void ReadingProgress::setPagesTotal(int tot){
+    totalPages=tot;
+}
+void ReadingProgress::setProcentage(float pre){
+    percentage=pre;
+}
+void ReadingProgress::setFinished(bool fin){
+    finished=fin;
+}
 
 ReadingProgress::ReadingProgress() {
     pagesRead = 0;
@@ -247,21 +256,18 @@ ReadingProgress::ReadingProgress() {
     percentage = 0;
     finished = false;
 }
-
 ReadingProgress::ReadingProgress(int pagesRead, int totalPages, float percentage, bool finished){
     this->pagesRead = pagesRead;
     this->totalPages = totalPages;
     this->percentage = percentage;
     this->finished = finished;
 }
-
 ReadingProgress::ReadingProgress(const ReadingProgress& prog){
     pagesRead = prog.pagesRead;
     totalPages = prog.totalPages;
     percentage = prog.percentage;
     finished = prog.finished;
 }
-
 ReadingProgress& ReadingProgress::operator=(const ReadingProgress &obj){  /// operator= clasa ReadingProgress
     if(this == &obj){
         return *this;
@@ -272,7 +278,6 @@ ReadingProgress& ReadingProgress::operator=(const ReadingProgress &obj){  /// op
     this->finished = obj.finished;
     return *this;
 }
-
 istream& operator>>(istream& is, ReadingProgress& obj){  /// operator<< ReadingProgress
     bool fin;
     cout<<"Have you finished your book?"<<endl<<"Press 1 if you did and 0 if it's still in progress:";
@@ -287,7 +292,7 @@ istream& operator>>(istream& is, ReadingProgress& obj){  /// operator<< ReadingP
     cout<<"How many pages have you read in total: ";
     is>>pg;
     obj.setPagesRead(pg);
-
+    return is;
 }
 ostream& operator<<(ostream& out, const ReadingProgress& obj){  /// operator<< AddBook
     out<<"You read this many pages so far: "<<obj.pagesRead<<endl;
@@ -298,30 +303,19 @@ ostream& operator<<(ostream& out, const ReadingProgress& obj){  /// operator<< A
 }
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ReadingGoal{
+
+class Read {
 private:
-    int Goal; 
-    // int*
-    //double
-    //float rating;
-public:
-
-
-};
-
-class ReadTracker {
-private:
+    User user;
     int totalBooks;
     Book* books[100];    // vectori de carti=colectia de carti
     ReadingProgress progress[100];
 
 public:
-    ReadTracker();
-    ~ReadTracker();
+    Read();
+    ~Read();
 
     void AddBookToCollection(Book *b);
     void print_books_to_update_progress();
@@ -331,18 +325,18 @@ public:
 
     int getTotalBooks();
 };
-int ReadTracker::getTotalBooks(){
+int Read::getTotalBooks(){
     return totalBooks;
 }
-ReadTracker::ReadTracker(){
+Read::Read(){
     totalBooks = 0;
 }
-ReadTracker::~ReadTracker(){
+Read::~Read(){
      for(int i=0; i<totalBooks;i++){
         delete books[i];
      }
 }
-void ReadTracker::update_progress(int index){
+void Read::update_progress(int index){
     int pages;
     cout<<"How many pages have you read in total: ";
     cin>>pages;
@@ -362,11 +356,11 @@ void ReadTracker::update_progress(int index){
 
 }
 
-void ReadTracker::AddBookToCollection(Book *b){
+void Read::AddBookToCollection(Book *b){
     books[totalBooks] = b;
     totalBooks++;
 }
-void ReadTracker::print_books_to_update_progress(){
+void Read::print_books_to_update_progress(){
 
     if(totalBooks==0){
         cout<<"There are no books in collection yet."<<endl<<endl;
@@ -380,7 +374,7 @@ void ReadTracker::print_books_to_update_progress(){
         cout<<endl;
     }
 }
-void ReadTracker::printCollection(){
+void Read::printCollection(){
 
     if(totalBooks==0){
         cout<<"There are no books in collection yet."<<endl<<endl;
@@ -392,14 +386,23 @@ void ReadTracker::printCollection(){
         cout<<endl;
     }
 }
-void ReadTracker::show_progress(){
+void Read::show_progress(){
 
     for(int i=0;i<totalBooks;i++){
         cout<<"Book: "<<books[i]->getTitle()<<endl;
         cout<<progress[i]<<endl;
     }
 }
-void case1_adding_book(ReadTracker &tracker) {
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void case1_adding_book(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
     cout<<endl;
     char title[50], author[50];
@@ -438,7 +441,7 @@ void case1_adding_book(ReadTracker &tracker) {
 
     system("CLS");
 }
-void case2_see_collection(ReadTracker &tracker) {
+void case2_see_collection(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
     cout<<endl;
     cout<<"My current book collection."<<endl<<endl;
@@ -451,7 +454,7 @@ void case2_see_collection(ReadTracker &tracker) {
     if(x==0)
         system("CLS");
 }
-void case3_update_progress(ReadTracker &tracker) {
+void case3_update_progress(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
     cout<<endl;
     cout<<"3. Update my reading progress."<<endl;
@@ -461,7 +464,9 @@ void case3_update_progress(ReadTracker &tracker) {
         cout<<"Press the number of the book you would like to update: ";
         int nrBook;
         cin>>nrBook;
-        tracker.update_progress(nrBook);
+        if(nrBook>=1 && nrBook <= tracker.getTotalBooks())
+            tracker.update_progress(nrBook-1);
+        else cout <<"Invalid number!";
 
     }
 
@@ -471,7 +476,7 @@ void case3_update_progress(ReadTracker &tracker) {
     if(x==0)
         system("CLS");
 }
-void rezolvare_cerinta4(ReadTracker &tracker) {
+void case4_show_status(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
     cout<<endl;
     cout<<"4. Track my reading."<<endl;
@@ -483,8 +488,16 @@ void rezolvare_cerinta4(ReadTracker &tracker) {
     if(x==0)
         system("CLS");
 }
-void main_meniu(ReadTracker &tracker) {
-    while (true) {
+
+class Meniu{
+private:
+    Read tracker;
+public:
+    void run(); 
+};
+
+void Meniu::run(){
+ while (true) {
         cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
         cout<<endl; cout<<"What would you like to do?"<<endl;
         cout<<endl; cout<<"1. Add new book to my colection."<<endl;
@@ -515,12 +528,15 @@ void main_meniu(ReadTracker &tracker) {
                 break; }
             case(4):{
                 system("CLS");
-                rezolvare_cerinta4(tracker);
+                case4_show_status(tracker);
                 break; }
         }
     }
 
 }
+
+
+
 void Book::printBook(){
     cout<<"Title: "<<title<<endl;
     cout<<"Author: "<<author<<endl;
@@ -529,8 +545,8 @@ void Book::printBook(){
 
 }
 int main() {
-    ReadTracker tracker;
-    main_meniu(tracker);
+    Meniu m;
+    m.run();
     return 0;
 }
 
