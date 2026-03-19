@@ -54,10 +54,9 @@ Book::Book(char* title,char* author,int nrPages,char genre): id(totalBooks++){  
 }
 Book::Book(const Book& obj): id(totalBooks++){  /// copy constructor clasa AddBook
     this->title = strcpy(new char[strlen(obj.title)+1], obj.title);
-   // strcpy(this->title,obj.title);
 
     this->author =  strcpy(new char[strlen(obj.author)+1], obj.author);
-   // strcpy(this->author,obj.author);
+   
 
     this->nrPages = obj.nrPages;
     this->genre = obj.genre;
@@ -249,7 +248,6 @@ bool ReadingProgress::getFinished() const{
 }
 
 
-
 class Read{
 private:
     int totalBooks;
@@ -389,8 +387,6 @@ void Read::sort_by_gen(){
 }
 
 
-
-
 class User{
 private:
     string name;
@@ -399,6 +395,7 @@ private:
 public:
     User();
     User(string name);
+    User(const User& obj);
 
     User& operator=(const User& obj);
     friend ostream& operator<<(ostream& out, const User& obj);
@@ -414,6 +411,10 @@ public:
     void ShowProgress();
 
 };
+User::User(const User& obj){
+    name = obj.name;
+    tracker = obj.tracker;
+}
 Read& User::getTracker(){
     return tracker;
 }
@@ -438,11 +439,13 @@ istream& operator>>(istream &is, User &obj){
     return is;
  }
 User& User::operator=(const User& obj){
-    if(this != &obj)
+    if(this != &obj){
         this->name= obj.name;
+        this->tracker= obj.tracker;
+    }
+        
     return *this;
 }
-
 
 
 void case1_adding_book(Read &tracker) {
@@ -566,7 +569,6 @@ void case5_sort_collection(Read &tracker) {
                    break; }
             }
     
-
     cout<<"If you want to go back to main meniu press 0"<<endl;
     int x;
     cin>>x;
@@ -656,8 +658,6 @@ login();
 
 }
 
-
-
 void Book::printBook(){
     cout<<"Title: "<<title<<endl;
     cout<<"Author: "<<author<<endl;
@@ -670,5 +670,3 @@ int main() {
     m.run();
     return 0;
 }
-
-
