@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 using namespace std;
 
 class Book{
@@ -154,67 +155,6 @@ istream& operator>>(istream& is,  Book& obj){ /// operator>> AddBook
 int Book::totalBooks = 1;
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-class User{
-private:
-    string name;
-  //  Book *books;
-   // ReadingProgress progress;
-
-public:
-    User();
-    User(string name);
-
-    User& operator=(const User& obj);
-    friend ostream& operator<<(ostream& out, const User& obj);
-    friend istream& operator>>(istream& is, User &obj);
-
-    void setName(string name);
-    string getName() const ;
-
-    void AddBook(Book *book);
-    void UpdateProgress(int index);
-    void ShowProgress();
-
-};
-User::User(){
-    name = "Anonymuos";
-}
-User::User(string name){
-    this->name = name;
-}
-string User::getName() const{
-    return this->name;
- }
-void User::setName(string name){
-    this->name=name;
- }
-ostream& operator<<(ostream& out, const User& obj){
-    out<<obj.name;
-    return out;
- }
-istream& operator>>(istream &is, User &obj){
-    is>>obj.name;
-    return is;
- }
-User& User::operator=(const User& obj){
-    if(this != &obj)
-        this->name= obj.name;
-    return *this;
-}
-void User::AddBook(Book *book){
-   //int nr = Book::getTotalBooks();
-    //books[nr] = book;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
 class ReadingProgress {
 private:
     int pagesRead;
@@ -308,12 +248,10 @@ bool ReadingProgress::getFinished() const{
     return finished;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 class Read{
 private:
-    User user;
     int totalBooks;
     Book* books[100];    // vectori de carti=colectia de carti
     ReadingProgress progress[100];
@@ -421,40 +359,89 @@ void Read::sort_by_gen(){
     cout<<"All my romance books: ";
     for(int i=0;i<totalBooks;i++){
         if(books[i]->getGenre() == 'r')
-        cout<<books[i]->getTitle()<<' ';
+        cout<<books[i]->getTitle()<<", ";
     }
     cout<<endl;
     cout<<"All my fantasy books: ";
     for(int i=0;i<totalBooks;i++){
         if(books[i]->getGenre() == 'f')
-        cout<<books[i]->getTitle()<<' ';
+        cout<<books[i]->getTitle()<<", ";
     }
     cout<<endl;
     cout<<"All my comedy books: ";
     for(int i=0;i<totalBooks;i++){
         if(books[i]->getGenre() == 'c')
-        cout<<books[i]->getTitle()<<' ';
+        cout<<books[i]->getTitle()<<", ";
     }
     cout<<endl;
     cout<<"All my murder mystery books: ";
     for(int i=0;i<totalBooks;i++){
         if(books[i]->getGenre() == 'm')
-        cout<<books[i]->getTitle()<<' ';
+        cout<<books[i]->getTitle()<<", ";
     }
-    
+    cout<<endl;
     cout<<"All my scientific books: ";
     for(int i=0;i<totalBooks;i++){
         if(books[i]->getGenre() == 's')
-        cout<<books[i]->getTitle()<<' ';
+        cout<<books[i]->getTitle()<<", ";
     
     }
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+class User{
+private:
+    string name;
+    Read tracker;
 
+public:
+    User();
+    User(string name);
+
+    User& operator=(const User& obj);
+    friend ostream& operator<<(ostream& out, const User& obj);
+    friend istream& operator>>(istream& is, User &obj);
+
+    void setName(string name);
+    string getName() const ;
+
+    Read& getTracker();
+
+    
+    void UpdateProgress(int index);
+    void ShowProgress();
+
+};
+Read& User::getTracker(){
+    return tracker;
+}
+User::User(){
+    name = "Anonymuos";
+}
+User::User(string name){
+    this->name = name;
+}
+string User::getName() const{
+    return this->name;
+ }
+void User::setName(string name){
+    this->name=name;
+ }
+ostream& operator<<(ostream& out, const User& obj){
+    out<<obj.name;
+    return out;
+ }
+istream& operator>>(istream &is, User &obj){
+    is>>obj.name;
+    return is;
+ }
+User& User::operator=(const User& obj){
+    if(this != &obj)
+        this->name= obj.name;
+    return *this;
+}
 
 
 
@@ -589,13 +576,39 @@ void case5_sort_collection(Read &tracker) {
 
 class Meniu{
 private:
-    Read tracker;
+    vector<User> users;
+    int usercurrent;
 public:
     void run(); 
+    void login();
 };
+void Meniu::login(){
+    string name;
+    cout<<"Enter UserName: ";
+    cin>>name;
+    for(int i=0;i<users.size();i++){
+        if(users[i].getName() == name){
+            usercurrent = i;
+            cout<<"Welcome back "<<name<< " !"<<endl;
+            return;
+        }
+    }
+    User u(name);
+    users.push_back(u);
+
+    usercurrent = users.size() - 1;
+    cout<<"New user created!"<<endl;
+}
 
 void Meniu::run(){
+
+login();
+
  while (true) {
+
+        Read &tracker = users[usercurrent].getTracker();
+
+
         cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
         cout<<endl; cout<<"What would you like to do?"<<endl;
         cout<<endl; cout<<"1. Add new book to my colection."<<endl;
