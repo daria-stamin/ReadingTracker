@@ -233,10 +233,6 @@ istream& operator>>(istream& is, ReadingProgress& obj){  /// operator<< ReadingP
     bool fin;
     cout<<"Have you finished your book?"<<endl<<"Press 1 if you did and 0 if it's still in progress:";
     is>>fin;
-    while(fin != 0 && fin != 1){
-        cout<<"Invalid answer! Please press 1 if you did and 0 if it's still in progress:";
-        is>>fin;
-    }
     obj.setFinished(fin);
 
     int pg;
