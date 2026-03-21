@@ -258,7 +258,7 @@ class Read{
 private:
     int static totalBooks;
     const int id;
-    Book* books[100];    // vectori de carti=colectia de carti
+    Book** books;    // vectori de carti=colectia de carti
     ReadingProgress progress[100];
 
 public:
@@ -282,11 +282,13 @@ int Read::getTotalBooks(){
 }
 Read::Read():id(){
     totalBooks = 0;
+    books = new Book*[100];
 }
 Read::~Read(){
      for(int i=0; i<totalBooks;i++){
         delete books[i];
      }
+    delete[] books;
 }
 void Read::update_progress(int index){
     int pages;
