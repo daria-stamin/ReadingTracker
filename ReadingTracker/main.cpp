@@ -159,14 +159,16 @@ class ReadingProgress {
 private:
     static int noProgress;
     const int id;
-    int pagesRead;
+    int* pagesRead;
     int totalPages;
-    float percentage; // read %
+    double percentage;
+    float ratio;
     bool finished;
 public:
     ReadingProgress();
-    ReadingProgress(int, int, float, bool);
+    ReadingProgress(int, int, double, bool);
     ReadingProgress(const ReadingProgress&);
+    ~ReadingProgress();
 
     ReadingProgress& operator=(const ReadingProgress&);
     friend ostream& operator<<(ostream&, const ReadingProgress&);
@@ -175,7 +177,7 @@ public:
     //setters
     void setPagesRead(int);
     void setPagesTotal(int);
-    void setProcentage(float);
+    void setProcentage(double);
     void setFinished(bool);
 
     //getters
@@ -183,26 +185,30 @@ public:
 
 };
 void ReadingProgress::setPagesRead(int pg){
-    pagesRead=pg;
+    *pagesRead = pg;
 }
 void ReadingProgress::setPagesTotal(int tot){
     totalPages=tot;
 }
-void ReadingProgress::setProcentage(float pre){
+void ReadingProgress::setProcentage(double pre){
     percentage=pre;
 }
 void ReadingProgress::setFinished(bool fin){
     finished=fin;
 }
-
+ReadingProgress::~ReadingProgress(){
+    delete pagesRead;
+}
 ReadingProgress::ReadingProgress():id(noProgress++) {
-    pagesRead = 0;
+    pagesRead = new int;
+    *pagesRead = 0;
     totalPages = 0;
     percentage = 0;
     finished = false;
 }
-ReadingProgress::ReadingProgress(int pagesRead, int totalPages, float percentage, bool finished):id(noProgress++){
-    this->pagesRead = pagesRead;
+ReadingProgress::ReadingProgress(int pagesRead, int totalPages, double percentage, bool finished):id(noProgress++){
+    
+    *this->pagesRead = pagesRead;
     this->totalPages = totalPages;
     this->percentage = percentage;
     this->finished = finished;
@@ -240,7 +246,7 @@ istream& operator>>(istream& is, ReadingProgress& obj){  /// operator<< ReadingP
     return is;
 }
 ostream& operator<<(ostream& out, const ReadingProgress& obj){  /// operator<< AddBook
-    out<<"You read this many pages so far: "<<obj.pagesRead<<endl;
+    out<<"You read this many pages so far: "<<*obj.pagesRead<<endl;
     out<<"In total there are this many pages: "<<obj.totalPages<<endl;
     out<<"Percentage: "<<obj.percentage<<endl;
     out<<"finish status: "<<obj.finished<<endl;
@@ -296,7 +302,8 @@ void Read::update_progress(int index){
     progress[index].setPagesRead(pages);
     progress[index].setPagesTotal(total);
 
-    float procent = (float) pages/ total * 100;
+    float ratio = (float) pages/ total;
+    double procent = ratio * 100;
     progress[index].setProcentage(procent);
 
     if(pages == total)
