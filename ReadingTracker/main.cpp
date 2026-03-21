@@ -5,12 +5,12 @@ using namespace std;
 
 class Book{
 private:
-    static int totalBooks; //nr of books
+    static int totalBooks; 
     const int id;
     char* title;
     char* author;
     int nrPages;
-    char genre; // char r-romance; f-fantasy; c-comedy; s-scientific; m-murder_mystery
+    char genre; 
 public:
     Book();
     Book(char* title,char* author,int nrPages,char genre);
@@ -20,15 +20,11 @@ public:
 
     friend ostream& operator<<(ostream&, const Book&);
     friend istream& operator>>(istream&, Book&);
-
-    // getters
-    static int getTotalBooks();
     const char* getTitle() const;
     const char* getAuthor() const;
     int getNrPages() const;
     char getGenre() const;
 
-    // setters
     void setTitle(char*);
     void setAuthor(char*);
     void setNrPages(int);
@@ -42,7 +38,7 @@ Book::Book():id(totalBooks++){
     nrPages = 0;
     genre = '-';
 }
-Book::Book(char* title,char* author,int nrPages,char genre): id(totalBooks++){  /// constructor clasa AddBook
+Book::Book(char* title,char* author,int nrPages,char genre): id(totalBooks++){  
     this->title = new char[strlen(title)+1];
     strcpy(this->title,title);
 
@@ -52,7 +48,7 @@ Book::Book(char* title,char* author,int nrPages,char genre): id(totalBooks++){  
     this->nrPages = nrPages;
     this->genre = genre;
 }
-Book::Book(const Book& obj): id(totalBooks++){  /// copy constructor clasa AddBook
+Book::Book(const Book& obj): id(totalBooks++){  
     this->title = strcpy(new char[strlen(obj.title)+1], obj.title);
    // strcpy(this->title,obj.title);
 
@@ -62,11 +58,11 @@ Book::Book(const Book& obj): id(totalBooks++){  /// copy constructor clasa AddBo
     this->nrPages = obj.nrPages;
     this->genre = obj.genre;
 }
-Book::~Book() {   /// deconstructor clasa AddBook
+Book::~Book() {   
     delete[] title;
     delete[] author;
 }
-Book& Book::operator=(const Book &obj){  /// operator= clasa AddBook
+Book& Book::operator=(const Book &obj){  
 
     if(this == &obj){
         return *this;
@@ -112,14 +108,14 @@ void Book::setGenre(char genre){
     if(genre == 'r' || genre == 'f' || genre == 'c' || genre == 's' || genre == 'm')
     this->genre = genre;
 }
-ostream& operator<<(ostream& out, const Book& obj){  /// operator<< AddBook
+ostream& operator<<(ostream& out, const Book& obj){  
     out<<"Title: "<<obj.title<<endl;
     out<<"Author: "<<obj.author<<endl;
     out<<"Number of pages: "<<obj.nrPages<<endl;
     out<<"Genre: "<<obj.genre<<endl;
     return out;
 }
-istream& operator>>(istream& is,  Book& obj){ /// operator>> AddBook
+istream& operator>>(istream& is,  Book& obj){ 
 
     char title[50], author[50];
     int pg; char gen;
@@ -219,7 +215,7 @@ ReadingProgress::ReadingProgress(const ReadingProgress& prog):id(noProgress++){
     percentage = prog.percentage;
     finished = prog.finished;
 }
-ReadingProgress& ReadingProgress::operator=(const ReadingProgress &obj){  /// operator= clasa ReadingProgress
+ReadingProgress& ReadingProgress::operator=(const ReadingProgress &obj){  
     if(this == &obj){
         return *this;
     }
@@ -229,7 +225,7 @@ ReadingProgress& ReadingProgress::operator=(const ReadingProgress &obj){  /// op
     this->finished = obj.finished;
     return *this;
 }
-istream& operator>>(istream& is, ReadingProgress& obj){  /// operator<< ReadingProgress
+istream& operator>>(istream& is, ReadingProgress& obj){  
     bool fin;
     cout<<"Have you finished your book?"<<endl<<"Press 1 if you did and 0 if it's still in progress:";
     is>>fin;
@@ -241,7 +237,7 @@ istream& operator>>(istream& is, ReadingProgress& obj){  /// operator<< ReadingP
     obj.setPagesRead(pg);
     return is;
 }
-ostream& operator<<(ostream& out, const ReadingProgress& obj){  /// operator<< AddBook
+ostream& operator<<(ostream& out, const ReadingProgress& obj){  
     out<<"You read this many pages so far: "<<*obj.pagesRead<<endl;
     out<<"In total there are this many pages: "<<obj.totalPages<<endl;
     out<<"Percentage: "<<obj.percentage<<endl;
@@ -258,7 +254,7 @@ class Read{
 private:
     int static totalBooks;
     const int id;
-    Book** books;    // vectori de carti=colectia de carti
+    Book** books;    
     ReadingProgress progress[100];
 
 public:
@@ -588,21 +584,21 @@ class Meniu{
 private:
     vector<User> users;
     int usercurrent;
-public:
+public: 
     void run(); 
     void login();
 };
 void Meniu::login(){
     string name;
-    cout<<"Enter UserName: ";
+    cout<<"Enter Username: ";
     cin>>name;
-    for(int i=0;i<users.size();i++){
+    /*for(int i=0;i<users.size();i++){
         if(users[i].getName() == name){
             usercurrent = i;
             cout<<"Welcome back "<<name<< " !"<<endl;
             return;
         }
-    }
+    }*/
     User u(name);
     users.push_back(u);
 
