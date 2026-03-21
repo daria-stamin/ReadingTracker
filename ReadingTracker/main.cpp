@@ -54,9 +54,10 @@ Book::Book(char* title,char* author,int nrPages,char genre): id(totalBooks++){  
 }
 Book::Book(const Book& obj): id(totalBooks++){  /// copy constructor clasa AddBook
     this->title = strcpy(new char[strlen(obj.title)+1], obj.title);
+   // strcpy(this->title,obj.title);
 
     this->author =  strcpy(new char[strlen(obj.author)+1], obj.author);
-   
+   // strcpy(this->author,obj.author);
 
     this->nrPages = obj.nrPages;
     this->genre = obj.genre;
@@ -156,6 +157,8 @@ int Book::totalBooks = 1;
 
 class ReadingProgress {
 private:
+    static int noProgress;
+    const int id;
     int pagesRead;
     int totalPages;
     float percentage; // read %
@@ -192,19 +195,19 @@ void ReadingProgress::setFinished(bool fin){
     finished=fin;
 }
 
-ReadingProgress::ReadingProgress() {
+ReadingProgress::ReadingProgress():id(noProgress++) {
     pagesRead = 0;
     totalPages = 0;
     percentage = 0;
     finished = false;
 }
-ReadingProgress::ReadingProgress(int pagesRead, int totalPages, float percentage, bool finished){
+ReadingProgress::ReadingProgress(int pagesRead, int totalPages, float percentage, bool finished):id(noProgress++){
     this->pagesRead = pagesRead;
     this->totalPages = totalPages;
     this->percentage = percentage;
     this->finished = finished;
 }
-ReadingProgress::ReadingProgress(const ReadingProgress& prog){
+ReadingProgress::ReadingProgress(const ReadingProgress& prog):id(noProgress++){
     pagesRead = prog.pagesRead;
     totalPages = prog.totalPages;
     percentage = prog.percentage;
@@ -247,10 +250,12 @@ bool ReadingProgress::getFinished() const{
     return finished;
 }
 
+int ReadingProgress::noProgress=0;
 
 class Read{
 private:
-    int totalBooks;
+    int static totalBooks;
+    const int id;
     Book* books[100];    // vectori de carti=colectia de carti
     ReadingProgress progress[100];
 
@@ -273,7 +278,7 @@ public:
 int Read::getTotalBooks(){
     return totalBooks;
 }
-Read::Read(){
+Read::Read():id(){
     totalBooks = 0;
 }
 Read::~Read(){
@@ -386,18 +391,19 @@ void Read::sort_by_gen(){
     }
 }
 
+int Read::totalBooks=0;
+
 
 class User{
 private:
-    static int totalUsers;
-    int const id;
+    int static noUser;
+    const int id;
     string name;
     Read tracker;
 
 public:
     User();
     User(string name);
-    User(const User& obj);
 
     User& operator=(const User& obj);
     friend ostream& operator<<(ostream& out, const User& obj);
@@ -408,18 +414,18 @@ public:
 
     Read& getTracker();
 
+    
+    void UpdateProgress(int index);
+    void ShowProgress();
+
 };
-User::User(const User& obj): id(totalUsers++){
-    name = obj.name;
-    tracker = obj.tracker;
-}
 Read& User::getTracker(){
     return tracker;
 }
-User::User(): id(totalUsers++){
+User::User():id(noUser++){
     name = "Anonymuos";
 }
-User::User(string name): id(totalUsers++){
+User::User(string name):id(noUser++){
     this->name = name;
 }
 string User::getName() const{
@@ -437,14 +443,12 @@ istream& operator>>(istream &is, User &obj){
     return is;
  }
 User& User::operator=(const User& obj){
-    if(this != &obj){
+    if(this != &obj)
         this->name= obj.name;
-        this->tracker= obj.tracker;
-    }
-        
     return *this;
 }
-int User::totalUsers = 1 ;
+
+int User::noUser=0;
 
 void case1_adding_book(Read &tracker) {
     cout<<"----------------------------------------------- Reading Tracker ------------------------------------------------------ "<<endl;
@@ -567,6 +571,7 @@ void case5_sort_collection(Read &tracker) {
                    break; }
             }
     
+
     cout<<"If you want to go back to main meniu press 0"<<endl;
     int x;
     cin>>x;
@@ -655,6 +660,8 @@ login();
     }
 
 }
+
+
 
 void Book::printBook(){
     cout<<"Title: "<<title<<endl;
