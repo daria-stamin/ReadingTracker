@@ -163,7 +163,7 @@ private:
 public:
     ReadingProgress();
     ReadingProgress(int, int, double, bool);
-    ReadingProgress(const ReadingProgress&);
+    ReadingProgress(const ReadingProgress& obj);
     ~ReadingProgress();
 
     ReadingProgress& operator=(const ReadingProgress&);
@@ -259,7 +259,13 @@ private:
 
 public:
     Read();
+    Read(const Read&);
     ~Read();
+
+    Read& operator=(const Read& obj);
+    friend ostream& operator<<(ostream& out, const Read& obj);
+    friend istream& operator>>(istream& is, Read &obj);
+
 
     void AddBookToCollection(Book *b);
     void print_books_to_update_progress();
@@ -280,11 +286,37 @@ Read::Read():id(){
     totalBooks = 0;
     books = new Book*[100];
 }
+Read::Read(const Read &obj):id(){
+    this->books = obj.books;
+    *this->progress = *obj.progress;
+    
+}
 Read::~Read(){
      for(int i=0; i<totalBooks;i++){
         delete books[i];
      }
     delete[] books;
+}
+Read& Read::operator=(const Read& obj){
+    if(this == &obj)
+        return *this;
+
+    for(int i=0; i<100;i++){
+        if(this->books[i] != nullptr)
+            delete this->books[i];
+        
+    }
+    for (int i=0; i<100; i++) {
+        this->progress[i] = obj.progress[i];
+    }
+
+    for (int i=0; i<100; i++){
+        if (obj.books[i] != nullptr) 
+            this->books[i] = new Book(*obj.books[i]);
+        else 
+            this->books[i] = nullptr;
+        return *this;
+    }
 }
 void Read::update_progress(int index){
     int pages;
@@ -405,6 +437,7 @@ private:
 public:
     User();
     User(string name);
+    User(const User& obj);
 
     User& operator=(const User& obj);
     friend ostream& operator<<(ostream& out, const User& obj);
@@ -420,6 +453,8 @@ public:
     void ShowProgress();
 
 };
+
+
 Read& User::getTracker(){
     return tracker;
 }
@@ -428,6 +463,11 @@ User::User():id(noUser++){
 }
 User::User(string name):id(noUser++){
     this->name = name;
+}
+User::User(const User &obj):id(noUser++){
+    this->name=obj.name;
+    this->tracker = obj.tracker;
+    
 }
 string User::getName() const{
     return this->name;
@@ -444,8 +484,10 @@ istream& operator>>(istream &is, User &obj){
     return is;
  }
 User& User::operator=(const User& obj){
-    if(this != &obj)
+    if(this != &obj){
+        this->tracker = obj.tracker;
         this->name= obj.name;
+    }
     return *this;
 }
 
