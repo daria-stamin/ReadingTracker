@@ -25,7 +25,6 @@ public:
     const char* getAuthor() const;
     int getNrPages() const;
     char getGenre() const;
-    static int getTotalBooks();
 
     void setTitle(char*);
     void setAuthor(char*);
@@ -146,9 +145,6 @@ istream& operator>>(istream& is,  Book& obj){
 
     return is;
 
-}
-int Book::getTotalBooks(){
-    return totalBooks;
 }
 int Book::totalBooks = 1;
 
@@ -324,8 +320,8 @@ Read::Read(const Read& obj):id(){
     totalBooks = obj.totalBooks;
 
     for(int i = 0; i < totalBooks; i++){
-        books[i] = new Book(*obj.books[i]);   
-        progress[i] = obj.progress[i];        
+        books[i] = new Book(*obj.books[i]);
+        progress[i] = obj.progress[i];
     }
 
     for(int i = totalBooks; i < 100; i++)
@@ -333,7 +329,7 @@ Read::Read(const Read& obj):id(){
 
 }
 ostream& operator<<(ostream& out, const Read& obj){
-    
+
     if(obj.totalBooks == 0){
         out<<"There are no books in collection."<<endl;
         return out;
@@ -350,12 +346,12 @@ Read& Read::operator=(const Read& obj){
     if(this == &obj)
         return *this;
 
-    for(int i=0; i<Book::getTotalBooks(); i++)
+    for(int i=0; i<totalBooks; i++)
         delete books[i];
 
     totalBooks = obj.totalBooks;
 
-    for(int i=0; i<Book::getTotalBooks(); i++){
+    for(int i=0; i<totalBooks; i++){
         books[i] = new Book(*obj.books[i]);
         progress[i] = obj.progress[i];
     }
