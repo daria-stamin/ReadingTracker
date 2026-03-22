@@ -25,6 +25,7 @@ public:
     const char* getAuthor() const;
     int getNrPages() const;
     char getGenre() const;
+    static int getTotalBooks();
 
     void setTitle(char*);
     void setAuthor(char*);
@@ -145,6 +146,9 @@ istream& operator>>(istream& is,  Book& obj){
 
     return is;
 
+}
+int Book::getTotalBooks(){
+    return totalBooks;
 }
 int Book::totalBooks = 1;
 
