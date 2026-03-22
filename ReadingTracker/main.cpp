@@ -350,12 +350,12 @@ Read& Read::operator=(const Read& obj){
     if(this == &obj)
         return *this;
 
-    for(int i=0; i<totalBooks; i++)
+    for(int i=0; i<Book::getTotalBooks(); i++)
         delete books[i];
 
     totalBooks = obj.totalBooks;
 
-    for(int i=0; i<totalBooks; i++){
+    for(int i=0; i<Book::getTotalBooks(); i++){
         books[i] = new Book(*obj.books[i]);
         progress[i] = obj.progress[i];
     }
