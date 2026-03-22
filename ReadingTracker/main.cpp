@@ -318,6 +318,32 @@ Read& Read::operator=(const Read& obj){
         return *this;
     }
 }
+
+istream& operator>>(istream& is, Read& obj){
+    int n;
+    cout<<"How many books would you like to add to colection: ";
+    is>>n;
+
+    for(int i=1;i<=n;i++){
+
+        Book* newBook = new Book();
+        is >> *newBook;
+        obj.AddBookToCollection(newBook);
+        obj.update_progress(i);
+    }
+
+    return is;
+}
+ostream& operator<<(ostream& out, const Read& obj){
+    for (int i=0; i<obj.totalBooks;i++){
+        cout<<"Book "<<i+1<<":";
+        if (obj.books[i] != nullptr) {
+            out << *obj.books[i]; 
+        }
+    out<<obj.progress[i];
+    }
+    return out;
+}
 void Read::update_progress(int index){
     int pages;
     cout<<"How many pages have you read in total: ";
