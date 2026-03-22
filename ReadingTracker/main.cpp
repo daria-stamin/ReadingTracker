@@ -261,8 +261,7 @@ int ReadingProgress::noProgress=0;
 
 
 
-class Read
-{
+class Read{
 private:
     int static totalBooks;
     const int id;
@@ -317,7 +316,6 @@ istream& operator>>(istream& is, Read& obj){
 
     return is;
 }
-
 Read::Read(const Read& obj):id(){
     totalBooks = obj.totalBooks;
 
@@ -330,7 +328,6 @@ Read::Read(const Read& obj):id(){
         books[i] = nullptr;
 
 }
-
 ostream& operator<<(ostream& out, const Read& obj){
     
     if(obj.totalBooks == 0){
@@ -361,8 +358,6 @@ Read& Read::operator=(const Read& obj){
 
     return *this;
 }
-
-
 void Read::update_progress(int index){
     int pages;
     cout<<"How many pages have you read in total: ";
@@ -517,17 +512,10 @@ User::User():id(noUser++){
 User::User(string name):id(noUser++){
     this->name = name;
 }
-
 User::User(const User&  obj):id(noUser++){
-///////////////////////////////////////////////////////////////////////////
-
-
-
-
+    name = obj.name;
+    tracker = obj.tracker;
 }
-
-
-
 string User::getName() const{
     return this->name;
 }
@@ -703,7 +691,7 @@ public:
 };
 void Meniu::login(){
     string name;
-    cout<<"Enter UserName: ";
+    cout<<"Enter Username: ";
     cin>>name;
     for(int i=0; i<users.size(); i++)
     {
